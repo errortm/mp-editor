@@ -24,7 +24,7 @@
 1. 克隆代码仓库
 
 ```bash
-git clone https://github.com/yourname/mp-editor.git
+git clone https://github.com/errortm/mp-editor.git
 cd mp-editor
 ```
 
