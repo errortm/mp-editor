@@ -1,10 +1,11 @@
 import express from 'express';
 import cors from 'cors';
 // 如果你有 MPEditorService，可以保留，否则先用 mock
-// import { MPEditorService } from './dist/services/MPEditorService.es.js';
+import { MPEditorService } from './dist/services/MPEditorService.es.js';
 
 const app = express();
 const port = 3000;
+const mpEditorService = new MPEditorService();
 app.use(cors());
 app.use(express.json());
 
@@ -44,9 +45,23 @@ app.get('/v1/tools', (req, res) => {
 app.post('/v1/tool-invoke', async (req, res) => {
   const { tool, parameters } = req.body;
   if (tool === 'format') {
-    res.json({ result: { formattedContent: "格式化结果", previewHtml: "<div>预览</div>" } });
+    try {
+      const formatResult = await mpEditorService.format(parameters.content, parameters.style, parameters.customStyle);
+      res.json({ result: formatResult });
+    } catch (error) {
+      console.error('Format tool error:', error);
+      res.status(500).json({ error: 'Format tool failed' });
+    }
   } else if (tool === 'export') {
-    res.json({ result: { fileUrl: "http://example.com/file.pdf" } });
+    try {
+      // This is expected to fail due to browser-specific code (e.g., saveAs)
+      const exportResult = await mpEditorService.export(parameters.content, parameters.format);
+      res.json({ result: exportResult });
+    } catch (error) {
+      console.error('Export tool error:', error);
+      // Expecting this to fail, but still good to log and return a proper error
+      res.status(500).json({ error: 'Export tool failed as it uses browser-specific APIs' });
+    }
   } else {
     res.status(400).json({ error: 'Unknown tool' });
   }
