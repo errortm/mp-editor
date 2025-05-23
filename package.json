@@ -1,42 +1,35 @@
 {
   "name": "mp-editor",
-  "version": "1.0.0",
-  "description": "微信公众号文章格式化工具",
+  "private": true,
+  "version": "0.0.0",
   "type": "module",
-  "main": "dist/server.js",
   "scripts": {
-    "build": "tsc",
-    "dev": "node --loader ts-node/esm src/server.ts",
-    "start": "node dist/server.js"
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "lint": "eslint .",
+    "preview": "vite preview"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/errortm/mp-editor.git"
-  },
-  "keywords": [
-    "wechat",
-    "mp",
-    "editor",
-    "formatting"
-  ],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/errortm/mp-editor/issues"
-  },
-  "homepage": "https://github.com/errortm/mp-editor#readme",
   "dependencies": {
-    "cors": "^2.8.5",
-    "dotenv": "^16.0.3",
-    "express": "^4.18.2"
+    "@uiw/react-md-editor": "^4.0.7",
+    "highlight.js": "^11.11.1",
+    "marked": "^15.0.12",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
   },
   "devDependencies": {
-    "@types/cors": "^2.8.18",
-    "@types/express": "^4.17.21",
-    "@types/node": "^20.11.24",
-    "nodemon": "^2.0.22",
-    "ts-node": "^10.9.2",
-    "ts-node-dev": "^2.0.0",
-    "typescript": "^5.3.3"
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
+    "@eslint/js": "^9.25.0",
+    "@types/react": "^19.1.5",
+    "@types/react-dom": "^19.1.5",
+    "@vitejs/plugin-react": "^4.4.1",
+    "antd": "^5.25.2",
+    "eslint": "^9.25.0",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-react-refresh": "^0.4.19",
+    "globals": "^16.0.0",
+    "typescript": "~5.8.3",
+    "typescript-eslint": "^8.30.1",
+    "vite": "^6.3.5"
   }
 }
