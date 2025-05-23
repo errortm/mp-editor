@@ -1,5 +1,5 @@
-import React from 'react';
-import html2pdf from 'html2pdf.js';
+import { useState } from 'react';
+import html2pdf from 'html2pdf.js/dist/html2pdf.bundle.min.js';
 import { Document, Packer, Paragraph, TextRun } from 'docx';
 import { saveAs } from 'file-saver';
 
@@ -8,40 +8,48 @@ interface ExportToolsProps {
   title: string;
 }
 
-const ExportTools: React.FC<ExportToolsProps> = ({ html, title }) => {
-  // 导出为PDF
-  const exportToPDF = async () => {
-    const element = document.createElement('div');
-    element.innerHTML = html;
-    element.style.padding = '20px';
-    
-    const opt = {
-      margin: 1,
-      filename: `${title || '文章'}.pdf`,
-      image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: { scale: 2 },
-      jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
-    };
+export const ExportTools: React.FC<ExportToolsProps> = ({ html, title }) => {
+  const [isExporting, setIsExporting] = useState(false);
 
+  const exportToPDF = async () => {
+    if (!html) return;
+    
+    setIsExporting(true);
     try {
+      const element = document.createElement('div');
+      element.innerHTML = html;
+      
+      const opt = {
+        margin: 1,
+        filename: `${title}.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+      };
+
       await html2pdf().set(opt).from(element).save();
     } catch (error) {
       console.error('PDF导出失败:', error);
-      alert('PDF导出失败，请重试');
+      alert('PDF导出失败，请稍后重试');
+    } finally {
+      setIsExporting(false);
     }
   };
 
-  // 导出为Word
   const exportToWord = async () => {
+    if (!html) return;
+    
+    setIsExporting(true);
     try {
-      // 创建临时div来解析HTML
+      // 创建临时元素来解析HTML
       const tempDiv = document.createElement('div');
       tempDiv.innerHTML = html;
       
       // 提取文本内容
       const paragraphs = Array.from(tempDiv.getElementsByTagName('p')).map(p => 
         new Paragraph({
-          children: [new TextRun(p.textContent || '')]
+          children: [new TextRun(p.textContent || '')],
+          spacing: { after: 200 }
         })
       );
 
@@ -54,46 +62,48 @@ const ExportTools: React.FC<ExportToolsProps> = ({ html, title }) => {
       });
 
       // 生成并下载文件
-      const buffer = await Packer.toBuffer(doc);
-      const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
-      saveAs(blob, `${title || '文章'}.docx`);
+      const blob = await Packer.toBlob(doc);
+      saveAs(blob, `${title}.docx`);
     } catch (error) {
       console.error('Word导出失败:', error);
-      alert('Word导出失败，请重试');
+      alert('Word导出失败，请稍后重试');
+    } finally {
+      setIsExporting(false);
     }
   };
 
   return (
-    <div className="export-tools" style={{ margin: '20px 0', textAlign: 'center' }}>
-      <button 
+    <div className="export-tools" style={{ display: 'flex', gap: '0.5rem' }}>
+      <button
+        className="btn btn-primary tooltip"
         onClick={exportToPDF}
-        style={{
-          background: '#07c160',
-          color: '#fff',
-          border: 'none',
-          padding: '8px 16px',
-          borderRadius: '4px',
-          marginRight: '12px',
-          cursor: 'pointer'
-        }}
+        disabled={!html || isExporting}
+        data-tooltip="导出为PDF"
       >
-        导出PDF
+        {isExporting ? (
+          <>
+            <span className="loading"></span>
+            导出中...
+          </>
+        ) : (
+          'PDF'
+        )}
       </button>
-      <button 
+      <button
+        className="btn btn-primary tooltip"
         onClick={exportToWord}
-        style={{
-          background: '#1890ff',
-          color: '#fff',
-          border: 'none',
-          padding: '8px 16px',
-          borderRadius: '4px',
-          cursor: 'pointer'
-        }}
+        disabled={!html || isExporting}
+        data-tooltip="导出为Word"
       >
-        导出Word
+        {isExporting ? (
+          <>
+            <span className="loading"></span>
+            导出中...
+          </>
+        ) : (
+          'Word'
+        )}
       </button>
     </div>
   );
-};
-
-export default ExportTools; 
+}; 

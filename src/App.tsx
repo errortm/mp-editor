@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import MarkdownIt from 'markdown-it'
 import './App.css'
+import './styles/global.css'
 import './styles/green.css'
 import './styles/orange.css'
 import './styles/lixiaolai.css'
@@ -10,7 +11,8 @@ import './styles/mdnice-csdn.css'
 import './styles/mdnice-zhihu.css'
 import './styles/mdnice-wechat.css'
 import ChartGenerator from './components/ChartGenerator'
-import ExportTools from './components/ExportTools'
+import { ExportTools } from './components/ExportTools'
+import { MPEditorService } from './services/MPEditorService'
 
 const md = new MarkdownIt({
   html: false,
@@ -40,165 +42,146 @@ const THEME_LIST = [
 ];
 
 function App() {
-  const [rawText, setRawText] = useState('');
-  const [formatHint, setFormatHint] = useState('主标题加粗，一级标题突出，二级标题次之，正文清晰易读，行距1.75，段间距24，整体极简留白，色彩参考#0B0C0E #A7A9AC #35565C #F4F4F0，所有内容左对齐。');
-  const [styleIdx, setStyleIdx] = useState(0);
+  const [content, setContent] = useState('');
+  const [formattedContent, setFormattedContent] = useState('');
+  const [style, setStyle] = useState('简洁风');
   const [customStyle, setCustomStyle] = useState('');
-  const [result, setResult] = useState('');
-  const [previewHtml, setPreviewHtml] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [previewHtml, setPreviewHtml] = useState('');
   const [theme, setTheme] = useState('green');
 
-  // 用markdown-it渲染
-  const renderPreview = (text: string) => {
-    return md.render(text || '');
-  };
+  const editor = new MPEditorService();
 
-  // 这里暂时用简单格式化模拟，后续可接入AI或更复杂逻辑
-  const handleFormat = () => {
-    let text = rawText.trim();
-    if (!text) {
-      setResult('请先粘贴原始文章内容。');
-      setPreviewHtml('');
-      return;
-    }
-    // 简单模拟：每段首行缩进2字符，主标题加粗
-    text = text
-      .replace(/\n{2,}/g, '\n')
-      .split('\n')
-      .map((line, idx) => {
-        if (idx === 0) return `**${line}**`;
-        return `  ${line}`;
-      })
-      .join('\n');
-    const finalText = text + `\n\n【风格：${PRESET_STYLES[styleIdx].name}${customStyle ? '，' + customStyle : ''}】\n【格式要求：${formatHint}】`;
-    setResult(finalText);
-    setPreviewHtml(renderPreview(finalText));
-  };
-
-  // AI智能美化
-  const handleAIAutoBeautify = async () => {
-    if (!rawText.trim()) {
-      setResult('请先粘贴原始文章内容。');
-      setPreviewHtml('');
-      return;
-    }
-    setIsLoading(true);
+  const handleFormat = async () => {
     try {
-      const prompt = `你是一个专业的新媒体编辑，请将下文美化为适合微信公众号发布的文章，只需调整格式，不要修改内容。要求：\n- 主标题加粗，一级标题20px深色，二级标题18px蓝灰色\n- 正文大号深色，行距1.75，段间距24\n- 整体极简留白，适当加粗重点词\n- 保持原有段落结构，不要随意合并或拆分段落\n- 输出格式为Markdown\n下文内容：\n${rawText}`;
-      const response = await fetch('http://172.16.10.13:1234/v1/chat/completions', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          model: 'qwen3-30b-a3b',
-          messages: [
-            { role: 'system', content: prompt }
-          ]
-        })
+      setIsLoading(true);
+      setError('');
+      const result = await editor.format({
+        content,
+        style,
+        customStyle,
       });
-      const data = await response.json();
-      const beautifiedText = data.choices[0].message.content;
-      setResult(beautifiedText);
-      setPreviewHtml(renderPreview(beautifiedText));
-    } catch (error) {
-      console.error('AI美化失败:', error);
-      setResult('AI美化失败，请稍后重试。');
-      setPreviewHtml('');
+      setFormattedContent(result.formattedContent);
+      setPreviewHtml(md.render(result.formattedContent || ''));
+    } catch (err) {
+      setError(err instanceof Error ? err.message : '格式化失败');
     } finally {
       setIsLoading(false);
     }
   };
 
-  // 复制HTML到剪贴板
-  const copyHtml = () => {
-    navigator.clipboard.writeText(previewHtml).then(() => {
-      alert('HTML已复制到剪贴板！');
-    }).catch(err => {
-      console.error('复制失败:', err);
-    });
+  const handleCopy = () => {
+    navigator.clipboard.writeText(formattedContent);
   };
 
   return (
-    <div className="mp-editor-container">
-      <h2>公众号文章格式编辑器</h2>
-      <div className="input-section">
-        <label>原始内容粘贴区：</label>
-        <textarea
-          rows={8}
-          value={rawText}
-          onChange={e => setRawText(e.target.value)}
-          placeholder="请粘贴公众号原文..."
-        />
-      </div>
-      <div className="hint-section">
-        <label>格式提示词：</label>
-        <input
-          type="text"
-          value={formatHint}
-          onChange={e => setFormatHint(e.target.value)}
-          style={{ width: '80%' }}
-        />
-      </div>
-      <div className="style-section">
-        <label>选择风格：</label>
-        {PRESET_STYLES.map((s, idx) => (
-          <label key={s.name} style={{ marginRight: 12 }}>
+    <div className="container fade-in">
+      <header className="card" style={{ textAlign: 'center', marginBottom: '2rem' }}>
+        <h1>MP Editor</h1>
+        <p style={{ color: 'var(--text-secondary)' }}>公众号文章格式编辑器</p>
+      </header>
+
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
+        <div className="card">
+          <h2>编辑区</h2>
+          <div style={{ marginBottom: '1rem' }}>
+            <label style={{ display: 'block', marginBottom: '0.5rem' }}>预设风格</label>
+            <select
+              className="input"
+              value={style}
+              onChange={(e) => setStyle(e.target.value)}
+            >
+              {PRESET_STYLES.map(s => (
+                <option key={s.name} value={s.name}>{s.name}</option>
+              ))}
+            </select>
+          </div>
+
+          <div style={{ marginBottom: '1rem' }}>
+            <label style={{ display: 'block', marginBottom: '0.5rem' }}>自定义风格</label>
             <input
-              type="radio"
-              checked={styleIdx === idx}
-              onChange={() => setStyleIdx(idx)}
+              type="text"
+              className="input"
+              value={customStyle}
+              onChange={(e) => setCustomStyle(e.target.value)}
+              placeholder="输入自定义风格要求"
             />
-            {s.name}
-          </label>
-        ))}
-        <input
-          type="text"
-          placeholder="微调风格（可选）"
-          value={customStyle}
-          onChange={e => setCustomStyle(e.target.value)}
-          style={{ width: 160, marginLeft: 8 }}
-        />
-      </div>
-      <div className="theme-section">
-        <label>选择公众号主题：</label>
-        {THEME_LIST.map(t => (
-          <label key={t.key} style={{ marginRight: 12 }}>
-            <input
-              type="radio"
-              checked={theme === t.key}
-              onChange={() => setTheme(t.key)}
+          </div>
+
+          <div style={{ marginBottom: '1rem' }}>
+            <label style={{ display: 'block', marginBottom: '0.5rem' }}>文章内容</label>
+            <textarea
+              className="input"
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+              rows={10}
+              placeholder="在此输入文章内容..."
             />
-            {t.name}
-          </label>
-        ))}
+          </div>
+
+          <button
+            className="btn btn-primary"
+            onClick={handleFormat}
+            disabled={isLoading || !content}
+          >
+            {isLoading ? (
+              <>
+                <span className="loading"></span>
+                处理中...
+              </>
+            ) : (
+              '格式化'
+            )}
+          </button>
+
+          {error && (
+            <div style={{ color: 'var(--danger-color)', marginTop: '1rem' }}>
+              {error}
+            </div>
+          )}
+        </div>
+
+        <div className="card">
+          <h2>预览区</h2>
+          <div
+            style={{
+              backgroundColor: 'white',
+              padding: '1rem',
+              borderRadius: 'var(--border-radius)',
+              minHeight: '200px',
+              marginBottom: '1rem',
+            }}
+            dangerouslySetInnerHTML={{ __html: formattedContent }}
+          />
+
+          <div style={{ display: 'flex', gap: '1rem' }}>
+            <button
+              className="btn btn-secondary"
+              onClick={handleCopy}
+              disabled={!formattedContent}
+            >
+              复制 HTML
+            </button>
+            <ExportTools
+              html={formattedContent}
+              title="格式化文章"
+            />
+          </div>
+        </div>
       </div>
-      <div className="button-group">
-        <button className="format-btn" onClick={handleFormat} style={{ marginRight: 12 }}>
-          一键格式化
-        </button>
-        <button className="format-btn" onClick={handleAIAutoBeautify} disabled={isLoading}>
-          {isLoading ? 'AI美化中...' : 'AI智能美化'}
-        </button>
-      </div>
-      <div className="result-section">
-        <label>格式化结果：</label>
-        <textarea
-          rows={10}
-          value={result}
-          readOnly
-          style={{ background: '#f6f6f6' }}
-        />
-      </div>
-      {rawText && <ChartGenerator text={rawText} />}
+
+      <footer className="card" style={{ textAlign: 'center', marginTop: '2rem' }}>
+        <p style={{ color: 'var(--text-secondary)' }}>
+          © 2024 MP Editor. All rights reserved.
+        </p>
+      </footer>
+
+      {content && <ChartGenerator text={content} />}
+
       <div className="preview-section">
         <label>公众号样式预览：</label>
-        <div className={THEME_LIST.find(t => t.key === theme)?.className || ''} style={{padding: 24, background: '#fff'}} dangerouslySetInnerHTML={{ __html: previewHtml }} />
-        <div className="button-group" style={{ marginTop: '16px' }}>
-          <button className="copy-btn" onClick={copyHtml} disabled={!previewHtml}>
-            复制HTML
-          </button>
-          {previewHtml && <ExportTools html={previewHtml} title={rawText.split('\n')[0] || '文章'} />}
-        </div>
+        <div className={THEME_LIST.find(t => t.key === theme)?.className || ''} style={{ padding: 24, background: '#fff' }} dangerouslySetInnerHTML={{ __html: previewHtml }} />
       </div>
     </div>
   )
