@@ -63,28 +63,52 @@ const getFancyStyles = (themeId: string) => {
           margin: 8px 0; font-size: 16px; color: #0056b3; line-height: 1.75;
         }
       `
+    case 'warm':
+      return `
+        .fancy-title {
+          font-size: 20px; font-weight: bold; color: #d35400; border-left: 4px solid #d35400; padding-left: 8px; margin: 16px 0; line-height: 1.75; background: none;
+        }
+        .fancy-title-gradient {
+          font-size: 20px; font-weight: bold; background: linear-gradient(90deg,#fbeee6,#f6c390); padding: 8px 16px; border-radius: 8px; margin: 16px 0; color: #d35400; line-height: 1.75;
+        }
+        .fancy-quote {
+          border-left: 4px solid #e67e22; background: #fbeee6; padding: 12px 16px; color: #b9770e; font-style: italic; margin: 16px 0; font-size: 16px; line-height: 1.75;
+        }
+        .fancy-hr-dashed {
+          border: none; border-top: 2px dashed #e67e22; margin: 24px 0;
+        }
+        .fancy-hr-double {
+          border: none; border-top: 4px double #d35400; margin: 24px 0;
+        }
+        .fancy-list {
+          list-style: none; padding-left: 0; margin: 12px 0;
+        }
+        .fancy-list li {
+          margin: 8px 0; font-size: 16px; color: #d35400; line-height: 1.75;
+        }
+      `
     default:
       return `
         .fancy-title {
           font-size: 20px; font-weight: bold; color: #ff4d4f; border-left: 4px solid #ff4d4f; padding-left: 8px; margin: 16px 0; line-height: 1.75; background: none;
         }
         .fancy-title-gradient {
-          font-size: 20px; font-weight: bold; background: linear-gradient(90deg,#fcb69f,#ffecd2); padding: 8px 16px; border-radius: 8px; margin: 16px 0; color: #222; line-height: 1.75;
+          font-size: 20px; font-weight: bold; background: linear-gradient(90deg,#fcb69f,#ffecd2); padding: 8px 16px; border-radius: 8px; margin: 16px 0; color: #ff4d4f; line-height: 1.75;
         }
         .fancy-quote {
-          border-left: 4px solid #1890ff; background: #f5faff; padding: 12px 16px; color: #0056b3; font-style: italic; margin: 16px 0; font-size: 16px; line-height: 1.75;
+          border-left: 4px solid #ff4d4f; background: #fff0f0; padding: 12px 16px; color: #b22222; font-style: italic; margin: 16px 0; font-size: 16px; line-height: 1.75;
         }
         .fancy-hr-dashed {
           border: none; border-top: 2px dashed #ff4d4f; margin: 24px 0;
         }
         .fancy-hr-double {
-          border: none; border-top: 4px double #1890ff; margin: 24px 0;
+          border: none; border-top: 4px double #b22222; margin: 24px 0;
         }
         .fancy-list {
           list-style: none; padding-left: 0; margin: 12px 0;
         }
         .fancy-list li {
-          margin: 8px 0; font-size: 16px; color: #222; line-height: 1.75;
+          margin: 8px 0; font-size: 16px; color: #ff4d4f; line-height: 1.75;
         }
       `
   }
