@@ -12,9 +12,10 @@ const EditorContainer = styled.div`
 interface EditorProps {
   value: string
   onChange: (value: string) => void
+  editorRef?: React.RefObject<any>
 }
 
-const Editor: React.FC<EditorProps> = ({ value, onChange }) => {
+const Editor: React.FC<EditorProps> = ({ value, onChange, editorRef }) => {
   return (
     <EditorContainer>
       <MDEditor
@@ -22,6 +23,7 @@ const Editor: React.FC<EditorProps> = ({ value, onChange }) => {
         onChange={(val) => onChange(val || '')}
         preview="edit"
         height="100%"
+        ref={editorRef}
       />
     </EditorContainer>
   )

@@ -22,6 +22,13 @@ const StyledContent = styled(Content)`
   display: flex;
   padding: 20px;
   gap: 20px;
+  height: 100%;
+`
+
+const VerticalDivider = styled.div`
+  width: 2px;
+  background: #f0f0f0;
+  margin: 0 10px;
 `
 
 function App() {
@@ -61,7 +68,8 @@ function App() {
           />
         </StyledHeader>
         <StyledContent>
-          <Editor value={markdown} onChange={setMarkdown} ref={editorRef} />
+          <Editor value={markdown} onChange={setMarkdown} editorRef={editorRef} />
+          <VerticalDivider />
           <Preview value={markdown} />
         </StyledContent>
       </StyledLayout>
