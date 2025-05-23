@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Button, Space, message, Select, Input } from 'antd'
 import styled from '@emotion/styled'
 import { useStyle } from '../../contexts/StyleContext'
+import FancyStyleLibrary from '../FancyStyleLibrary'
 
 const ToolbarContainer = styled.div`
   display: flex;
@@ -22,12 +23,14 @@ interface ToolbarProps {
   content: string
   onImport: (content: string) => void
   onAIAutoFormat?: (content: string) => void
+  onInsertHTML?: (html: string) => void
 }
 
-const Toolbar: React.FC<ToolbarProps> = ({ content, onImport, onAIAutoFormat }) => {
+const Toolbar: React.FC<ToolbarProps> = ({ content, onImport, onAIAutoFormat, onInsertHTML }) => {
   const { currentTemplate, setCurrentTemplate, templates } = useStyle()
   const [loading, setLoading] = useState(false)
   const [extraPrompt, setExtraPrompt] = useState('')
+  const [fancyOpen, setFancyOpen] = useState(false)
 
   const handleCopy = async () => {
     try {
@@ -123,6 +126,9 @@ const Toolbar: React.FC<ToolbarProps> = ({ content, onImport, onAIAutoFormat }) 
         allowClear
       />
       <Space>
+        <Button onClick={() => setFancyOpen(true)}>
+          花式样式库
+        </Button>
         <Button type="primary" onClick={handleCopy}>
           复制到剪贴板
         </Button>
@@ -132,6 +138,15 @@ const Toolbar: React.FC<ToolbarProps> = ({ content, onImport, onAIAutoFormat }) 
           AI智能排版
         </Button>
       </Space>
+      <FancyStyleLibrary
+        open={fancyOpen}
+        onClose={() => setFancyOpen(false)}
+        onInsert={html => {
+          setFancyOpen(false)
+          if (onInsertHTML) onInsertHTML(html)
+        }}
+        themeId={currentTemplate.id}
+      />
     </ToolbarContainer>
   )
 }

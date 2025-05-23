@@ -13,8 +13,85 @@ const PreviewContainer = styled.div`
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 `
 
+const getFancyStyles = (themeId: string) => {
+  switch (themeId) {
+    case 'minimal-blackwhite':
+      return `
+        .fancy-title {
+          font-size: 20px; font-weight: bold; color: #111; border-left: 4px solid #111; padding-left: 8px; margin: 16px 0; line-height: 1.75; background: none;
+        }
+        .fancy-title-gradient {
+          font-size: 20px; font-weight: bold; background: #eee; padding: 8px 16px; border-radius: 8px; margin: 16px 0; color: #111; line-height: 1.75;
+        }
+        .fancy-quote {
+          border-left: 4px solid #111; background: #fafafa; padding: 12px 16px; color: #222; font-style: italic; margin: 16px 0; font-size: 16px; line-height: 1.75;
+        }
+        .fancy-hr-dashed {
+          border: none; border-top: 2px dashed #111; margin: 24px 0;
+        }
+        .fancy-hr-double {
+          border: none; border-top: 4px double #111; margin: 24px 0;
+        }
+        .fancy-list {
+          list-style: none; padding-left: 0; margin: 12px 0;
+        }
+        .fancy-list li {
+          margin: 8px 0; font-size: 16px; color: #111; line-height: 1.75;
+        }
+      `
+    case 'business-blue':
+      return `
+        .fancy-title {
+          font-size: 20px; font-weight: bold; color: #0056b3; border-left: 4px solid #0056b3; padding-left: 8px; margin: 16px 0; line-height: 1.75; background: none;
+        }
+        .fancy-title-gradient {
+          font-size: 20px; font-weight: bold; background: linear-gradient(90deg,#e3f0ff,#b3d8ff); padding: 8px 16px; border-radius: 8px; margin: 16px 0; color: #0056b3; line-height: 1.75;
+        }
+        .fancy-quote {
+          border-left: 4px solid #007acc; background: #e6f7ff; padding: 12px 16px; color: #0056b3; font-style: italic; margin: 16px 0; font-size: 16px; line-height: 1.75;
+        }
+        .fancy-hr-dashed {
+          border: none; border-top: 2px dashed #0056b3; margin: 24px 0;
+        }
+        .fancy-hr-double {
+          border: none; border-top: 4px double #007acc; margin: 24px 0;
+        }
+        .fancy-list {
+          list-style: none; padding-left: 0; margin: 12px 0;
+        }
+        .fancy-list li {
+          margin: 8px 0; font-size: 16px; color: #0056b3; line-height: 1.75;
+        }
+      `
+    default:
+      return `
+        .fancy-title {
+          font-size: 20px; font-weight: bold; color: #ff4d4f; border-left: 4px solid #ff4d4f; padding-left: 8px; margin: 16px 0; line-height: 1.75; background: none;
+        }
+        .fancy-title-gradient {
+          font-size: 20px; font-weight: bold; background: linear-gradient(90deg,#fcb69f,#ffecd2); padding: 8px 16px; border-radius: 8px; margin: 16px 0; color: #222; line-height: 1.75;
+        }
+        .fancy-quote {
+          border-left: 4px solid #1890ff; background: #f5faff; padding: 12px 16px; color: #0056b3; font-style: italic; margin: 16px 0; font-size: 16px; line-height: 1.75;
+        }
+        .fancy-hr-dashed {
+          border: none; border-top: 2px dashed #ff4d4f; margin: 24px 0;
+        }
+        .fancy-hr-double {
+          border: none; border-top: 4px double #1890ff; margin: 24px 0;
+        }
+        .fancy-list {
+          list-style: none; padding-left: 0; margin: 12px 0;
+        }
+        .fancy-list li {
+          margin: 8px 0; font-size: 16px; color: #222; line-height: 1.75;
+        }
+      `
+  }
+}
+
 const StyledMarkdown = styled(MDEditor.Markdown, {
-  shouldForwardProp: (prop) => prop !== 'template'
+  shouldForwardProp: (prop) => prop !== 'template',
 })<{ template: any }>`
   h1 {
     ${(props) => props.template.styles.title}
@@ -34,6 +111,7 @@ const StyledMarkdown = styled(MDEditor.Markdown, {
   img {
     ${(props) => props.template.styles.image}
   }
+  ${(props) => getFancyStyles(props.template.id)}
 `
 
 interface PreviewProps {
