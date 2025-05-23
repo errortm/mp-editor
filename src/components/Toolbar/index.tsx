@@ -3,6 +3,8 @@ import { Button, Space, message, Select, Input } from 'antd'
 import styled from '@emotion/styled'
 import { useStyle } from '../../contexts/StyleContext'
 import FancyStyleLibrary from '../FancyStyleLibrary'
+import { requestAI } from '../../utils/ai'
+import aiConfig from '../../../ai.config.json'
 
 const ToolbarContainer = styled.div`
   display: flex;
@@ -24,6 +26,14 @@ interface ToolbarProps {
   onImport: (content: string) => void
   onAIAutoFormat?: (content: string) => void
   onInsertHTML?: (html: string) => void
+}
+
+function cleanAIContent(content: string) {
+  return content
+    .replace(/<think>[\s\S]*?<\/think>/gi, '')
+    .replace(/<\|im_start\|>think[\s\S]*?<\|im_end\|>/gi, '')
+    .replace(/<think>[\s\S]*$/gi, '')
+    .trim();
 }
 
 const Toolbar: React.FC<ToolbarProps> = ({ content, onImport, onAIAutoFormat, onInsertHTML }) => {
@@ -80,19 +90,13 @@ const Toolbar: React.FC<ToolbarProps> = ({ content, onImport, onAIAutoFormat, on
     }
     setLoading(true)
     try {
-      const prompt = `${extraPrompt ? extraPrompt + '\n' : ''}你是一个Markdown格式化专家。请将以下文本智能分段、分主标题、小标题、正文、列表，自动加上标准Markdown语法（如#、##、-、空行分段），适合微信公众号排版。请尽量贴合"${currentTemplate.name}"风格。务必用#和##标记主标题和小标题，正文用空行分段，列表用-或1.2.3.。如有数据请用Markdown表格，引用用>，代码用\`\`\`包裹。不要输出多余解释，严格只输出排版后的Markdown内容：\n\n${content}`
-      const res = await fetch('http://172.16.10.13:1234/v1/chat/completions', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          model: 'qwen3-30b-a3b',
-          messages: [{ role: 'user', content: prompt }]
-        })
-      })
-      const data = await res.json()
-      const aiContent = data.choices?.[0]?.message?.content || ''
-      if (aiContent) {
-        if (onAIAutoFormat) onAIAutoFormat(aiContent)
+      const prompt = `${extraPrompt ? extraPrompt + '\n' : ''}你是一个Markdown格式化专家。请将以下文本智能分段、分主标题、小标题、正文、列表，自动加上标准Markdown语法（如#、##、-、空行分段），适合微信公众号排版。请尽量贴合\"${currentTemplate.name}\"风格。务必用#和##标记主标题和小标题，正文用空行分段，列表用-或1.2.3.。如有数据请用Markdown表格，引用用>，代码用\`\`\`包裹。不要输出多余解释，严格只输出排版后的Markdown内容：\n\n${content}`
+      const data = await requestAI({ prompt })
+      // 兼容不同AI返回结构
+      const aiContent = data.choices?.[0]?.message?.content || data.candidates?.[0]?.content?.parts?.[0] || ''
+      const cleanContent = cleanAIContent(aiContent)
+      if (cleanContent) {
+        if (onAIAutoFormat) onAIAutoFormat(cleanContent)
         message.success('AI智能排版完成')
       } else {
         message.error('AI未返回内容')
@@ -138,6 +142,9 @@ const Toolbar: React.FC<ToolbarProps> = ({ content, onImport, onAIAutoFormat, on
           AI智能排版
         </Button>
       </Space>
+      <div style={{ marginLeft: 'auto', color: '#888', fontSize: 13, paddingLeft: 16 }}>
+        当前AI: {aiConfig.provider}
+      </div>
       <FancyStyleLibrary
         open={fancyOpen}
         onClose={() => setFancyOpen(false)}

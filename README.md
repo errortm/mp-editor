@@ -88,3 +88,38 @@ mp-editor/
 ---
 
 > 本项目仅供学习与个人使用，内容版权归原作者所有。
+
+## AI服务配置
+
+本项目支持多种AI智能排版服务，用户可通过根目录下的`ai.config.json`文件进行配置。
+
+### 配置示例
+```json
+{
+  "provider": "openai", // 可选：openai | gemini | lmstudio | qwen
+  "openai": {
+    "apiKey": "sk-xxxx",
+    "baseUrl": "https://api.openai.com/v1"
+  },
+  "gemini": {
+    "apiKey": "",
+    "baseUrl": "https://generativelanguage.googleapis.com/v1beta"
+  },
+  "lmstudio": {
+    "baseUrl": "http://localhost:1234/v1"
+  },
+  "qwen": {
+    "baseUrl": "http://localhost:8000/v1"
+  }
+}
+```
+
+### 使用说明
+- `provider` 字段决定当前使用的AI服务。
+- `apiKey` 请填写你自己的API密钥（如openai/gemini）。
+- `baseUrl` 可根据实际服务地址调整。
+- 本地大模型（如lmstudio/qwen）无需apiKey。
+- 页面右上角会显示当前AI服务类型，方便随时确认。
+
+### 安全提示
+如需开源部署，请勿直接提交包含私密key的配置文件，可用.env或服务端代理方式增强安全性。

@@ -38,6 +38,36 @@ const styleDefs = [
     baseClass: 'fancy-list',
     text: '<li>◆ 列表项一</li><li>◆ 列表项二</li>',
     tag: 'ul'
+  },
+  {
+    name: '花式副标题',
+    baseClass: 'fancy-subtitle',
+    text: '花式副标题',
+    tag: 'div'
+  },
+  {
+    name: '步骤/数字',
+    baseClass: 'fancy-step',
+    text: '① 步骤一',
+    tag: 'div'
+  },
+  {
+    name: '信息提示块',
+    baseClass: 'fancy-info',
+    text: '温馨提示：请保存好二维码',
+    tag: 'div'
+  },
+  {
+    name: '按钮/标签',
+    baseClass: 'fancy-btn',
+    text: '阅读全文',
+    tag: 'span'
+  },
+  {
+    name: '卡片内容块',
+    baseClass: 'fancy-card',
+    text: '内容分组展示',
+    tag: 'div'
   }
 ]
 

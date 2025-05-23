@@ -1,21 +1,19 @@
+import React from 'react'
 import MDEditor from '@uiw/react-md-editor'
 import styled from '@emotion/styled'
 
 const EditorContainer = styled.div`
   flex: 1;
   height: 100%;
-  .w-md-editor {
-    height: 100%;
-  }
+  overflow: auto;
 `
 
 interface EditorProps {
   value: string
   onChange: (value: string) => void
-  editorRef?: React.RefObject<any>
 }
 
-const Editor: React.FC<EditorProps> = ({ value, onChange, editorRef }) => {
+const Editor: React.FC<EditorProps> = ({ value, onChange }) => {
   return (
     <EditorContainer>
       <MDEditor
@@ -23,7 +21,7 @@ const Editor: React.FC<EditorProps> = ({ value, onChange, editorRef }) => {
         onChange={(val) => onChange(val || '')}
         preview="edit"
         height="100%"
-        ref={editorRef}
+        enableScroll={true}
       />
     </EditorContainer>
   )

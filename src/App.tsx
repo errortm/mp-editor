@@ -45,14 +45,18 @@ function App() {
 
   // 插入HTML片段到光标处
   const handleInsertHTML = (html: string) => {
-    // 1. 获取当前光标位置
-    // 2. 在markdown中插入html片段
-    // 3. 更新markdown内容
-    if (editorRef.current && typeof editorRef.current.insertText === 'function') {
-      editorRef.current.insertText(html)
+    // 尝试获取 MDEditor 内部 textarea
+    const textarea = document.querySelector('.w-md-editor-text-input') as HTMLTextAreaElement | null;
+    if (textarea) {
+      const start = textarea.selectionStart;
+      const end = textarea.selectionEnd;
+      setMarkdown(prev => prev.slice(0, start) + html + prev.slice(end));
+      setTimeout(() => {
+        textarea.focus();
+        textarea.selectionStart = textarea.selectionEnd = start + html.length;
+      }, 0);
     } else {
-      // 退而求其次，插入到末尾
-      setMarkdown(prev => prev + '\n' + html + '\n')
+      setMarkdown(prev => prev + '\n' + html + '\n');
     }
   }
 
