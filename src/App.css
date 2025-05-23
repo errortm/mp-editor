@@ -1,0 +1,157 @@
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #888;
+}
+
+.mp-editor-container {
+  max-width: 700px;
+  margin: 40px auto;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 16px #eee;
+  padding: 32px 28px 24px 28px;
+  font-family: 'PingFang SC', 'Microsoft YaHei', Arial, sans-serif;
+}
+.mp-editor-container h2 {
+  text-align: center;
+  margin-bottom: 28px;
+  font-weight: bold;
+  color: #2d2d2d;
+}
+.input-section,
+.hint-section,
+.style-section,
+.result-section {
+  margin-bottom: 20px;
+}
+label {
+  font-weight: 500;
+  color: #444;
+  margin-bottom: 6px;
+  display: block;
+}
+textarea {
+  width: 100%;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  padding: 10px;
+  font-size: 15px;
+  resize: vertical;
+  margin-top: 4px;
+  box-sizing: border-box;
+}
+input[type="text"] {
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 15px;
+  margin-top: 4px;
+  box-sizing: border-box;
+}
+.format-btn {
+  background: #07c160;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 32px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.format-btn:hover {
+  background: #05984a;
+}
+.result-section textarea {
+  background: #f6f6f6;
+  color: #222;
+  font-family: inherit;
+  font-size: 15px;
+}
+.style-section label {
+  font-weight: normal;
+  color: #666;
+  margin-right: 8px;
+  display: inline-block;
+}
+
+.button-group {
+  display: flex;
+  justify-content: center;
+  margin: 16px 0;
+}
+
+.preview-section {
+  margin-top: 20px;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  padding: 16px;
+  background: #f9f9f9;
+}
+
+.preview-content {
+  margin: 10px 0;
+  padding: 10px;
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 4px;
+  min-height: 100px;
+}
+
+.copy-btn {
+  background: #1890ff;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 16px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.copy-btn:hover {
+  background: #40a9ff;
+}
+
+.copy-btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
