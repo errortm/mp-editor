@@ -1,6 +1,6 @@
 import aiConfig from '../../ai.config.json'
 
-export type AIProvider = 'openai' | 'gemini' | 'lmstudio' | 'qwen'
+export type AIProvider = 'openai' | 'gemini' | 'lmstudio' | 'qwen' | 'deepseek' | 'zhipu' | 'hunyuan'
 
 interface AIRequestParams {
   prompt: string
@@ -30,25 +30,53 @@ export async function requestAI(params: AIRequestParams) {
         body: JSON.stringify({ contents: [{ parts: [{ text: params.prompt }] }] })
       }).then(res => res.json())
     case 'lmstudio':
-      return fetch(`${aiConfig.lmstudio.baseUrl}/chat/completions`, {
+      const response = await fetch(`${aiConfig.lmstudio.baseUrl}/chat/completions`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          model: params.model || 'Qwen/Qwen1.5-32B-Chat',
+          model: 'qwen3-30b-a3b',
           messages: [{ role: 'user', content: params.prompt }],
-          ...params.extra
+          temperature: 0.7,
+          max_tokens: 2000
         })
-      }).then(res => res.json())
-    case 'qwen':
-      return fetch(`${aiConfig.qwen.baseUrl}/chat/completions`, {
+      })
+      return await response.json()
+    case 'deepseek':
+      const deepseekResponse = await fetch(`${aiConfig.deepseek.baseUrl}/chat/completions`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${aiConfig.deepseek.apiKey}` },
         body: JSON.stringify({
-          model: params.model || 'Qwen/Qwen1.5-32B-Chat',
+          model: 'deepseek-chat',
           messages: [{ role: 'user', content: params.prompt }],
-          ...params.extra
+          temperature: 0.7,
+          max_tokens: 2000
         })
-      }).then(res => res.json())
+      })
+      return await deepseekResponse.json()
+    case 'zhipu':
+      const zhipuResponse = await fetch(`${aiConfig.zhipu.baseUrl}/chat/completions`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${aiConfig.zhipu.apiKey}` },
+        body: JSON.stringify({
+          model: 'glm-4',
+          messages: [{ role: 'user', content: params.prompt }],
+          temperature: 0.7,
+          max_tokens: 2000
+        })
+      })
+      return await zhipuResponse.json()
+    case 'hunyuan':
+      const hunyuanResponse = await fetch(`${aiConfig.hunyuan.baseUrl}/chat/completions`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${aiConfig.hunyuan.apiKey}` },
+        body: JSON.stringify({
+          model: 'hunyuan',
+          messages: [{ role: 'user', content: params.prompt }],
+          temperature: 0.7,
+          max_tokens: 2000
+        })
+      })
+      return await hunyuanResponse.json()
     default:
       throw new Error('不支持的AI服务提供商')
   }

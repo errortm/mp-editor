@@ -73,21 +73,7 @@ mp-editor/
 └── README.md
 ```
 
-## 常见问题
 
-- **AI排版无响应/报错？**
-  - 请确保本地 lmstudio 已启动并加载模型，API地址和模型名配置正确。
-  - 可在浏览器控制台查看详细报错信息。
-- **主题样式不生效？**
-  - 请刷新页面或重启开发服务器，确保样式模板已正确加载。
-
-## 贡献与反馈
-
-欢迎提交 issue、PR 或建议，帮助本项目持续优化！
-
----
-
-> 本项目仅供学习与个人使用，内容版权归原作者所有。
 
 ## AI服务配置
 
@@ -96,7 +82,7 @@ mp-editor/
 ### 配置示例
 ```json
 {
-  "provider": "openai", // 可选：openai | gemini | lmstudio | deepseek | zhipu | hunyuan
+  "provider": "lmstudio", // 可选：openai | gemini | lmstudio | deepseek | zhipu | hunyuan
   "openai": {
     "apiKey": "sk-xxxx",
     "baseUrl": "https://api.openai.com/v1"
@@ -133,5 +119,20 @@ mp-editor/
 ### 安全提示
 如需开源部署，请勿直接提交包含私密key的配置文件，可用.env或服务端代理方式增强安全性。
 
-## 致谢
+
+## 常见问题
+
+- **AI排版无响应/报错？**
+  - 请确保本地 lmstudio 已启动并加载模型，API地址和模型名配置正确。
+  - 可在浏览器控制台查看详细报错信息。
+- **主题样式不生效？**
+  - 请刷新页面或重启开发服务器，确保样式模板已正确加载。
+
+## 贡献与反馈
+
 本项目编辑器部分基于 [MDX-Editor](https://github.com/mdx-editor/editor) 开发，感谢原作者的开源贡献。原项目 LICENSE 已保留在项目根目录下，请参考 [LICENSE](LICENSE) 文件。
+欢迎提交 issue、PR 或建议，帮助本项目持续优化！
+
+---
+
+> 本项目仅供学习与个人使用，内容版权归原作者所有。
