@@ -12,14 +12,18 @@
   "dependencies": {
     "@uiw/react-md-editor": "^4.0.7",
     "highlight.js": "^11.11.1",
+    "mammoth": "^1.9.0",
     "marked": "^15.0.12",
+    "pdfjs-dist": "^2.16.105",
     "react": "^19.1.0",
-    "react-dom": "^19.1.0"
+    "react-dom": "^19.1.0",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
     "@eslint/js": "^9.25.0",
+    "@types/node": "^22.15.21",
     "@types/react": "^19.1.5",
     "@types/react-dom": "^19.1.5",
     "@vitejs/plugin-react": "^4.4.1",
