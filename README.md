@@ -123,3 +123,6 @@ mp-editor/
 
 ### 安全提示
 如需开源部署，请勿直接提交包含私密key的配置文件，可用.env或服务端代理方式增强安全性。
+
+## 致谢
+本项目编辑器部分基于 [MDX-Editor](https://github.com/mdx-editor/editor) 开发，感谢原作者的开源贡献。原项目 LICENSE 已保留在项目根目录下，请参考 [LICENSE](LICENSE) 文件。
