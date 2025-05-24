@@ -96,7 +96,7 @@ mp-editor/
 ### 配置示例
 ```json
 {
-  "provider": "openai", // 可选：openai | gemini | lmstudio | qwen
+  "provider": "openai", // 可选：openai | gemini | lmstudio | deepseek | zhipu | hunyuan
   "openai": {
     "apiKey": "sk-xxxx",
     "baseUrl": "https://api.openai.com/v1"
@@ -108,8 +108,17 @@ mp-editor/
   "lmstudio": {
     "baseUrl": "http://localhost:1234/v1"
   },
-  "qwen": {
-    "baseUrl": "http://localhost:8000/v1"
+  "deepseek": {
+    "apiKey": "",
+    "baseUrl": "https://api.deepseek.com/v1"
+  },
+  "zhipu": {
+    "apiKey": "",
+    "baseUrl": "https://open.bigmodel.cn/api/paas/v3"
+  },
+  "hunyuan": {
+    "apiKey": "",
+    "baseUrl": "https://hunyuan.cloud.tencent.com/hyllm/v1"
   }
 }
 ```
