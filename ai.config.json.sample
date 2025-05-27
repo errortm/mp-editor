@@ -1,5 +1,5 @@
 {
-  "provider": "openai", // 可选：openai | gemini | lmstudio | deepseek | zhipu | hunyuan
+  "provider": "gemma-3-27b",
   "openai": {
     "apiKey": "sk-xxxx",
     "baseUrl": "https://api.openai.com/v1"
@@ -8,7 +8,7 @@
     "apiKey": "",
     "baseUrl": "https://generativelanguage.googleapis.com/v1beta"
   },
-  "lmstudio": {
+  "qwen": {
     "baseUrl": "http://localhost:1234/v1"
   },
   "deepseek": {
@@ -22,5 +22,11 @@
   "hunyuan": {
     "apiKey": "",
     "baseUrl": "https://hunyuan.cloud.tencent.com/hyllm/v1"
+  },
+  "gemma-3-27b": {
+    "baseUrl": "http://localhost:1234/v1"
+  },
+  "gemma-3-12b": {
+    "baseUrl": "http://localhost:1234/v1"
   }
 } 

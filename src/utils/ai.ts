@@ -1,6 +1,6 @@
 import aiConfig from '../../ai.config.json'
 
-export type AIProvider = 'openai' | 'gemini' | 'lmstudio' | 'qwen' | 'deepseek' | 'zhipu' | 'hunyuan'
+export type AIProvider = 'openai' | 'gemini' | 'qwen' | 'deepseek' | 'zhipu' | 'hunyuan' | 'gemma-3-27b' | 'gemma-3-12b'
 
 interface AIRequestParams {
   prompt: string
@@ -59,8 +59,8 @@ export async function requestAI(params: AIRequestParams) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ contents: [{ parts: [{ text: params.prompt }] }] })
       }).then(res => res.json())
-    case 'lmstudio':
-      const response = await fetch(`${aiConfig.lmstudio.baseUrl}/chat/completions`, {
+    case 'qwen':
+      const response = await fetch(`${aiConfig.qwen.baseUrl}/chat/completions`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -110,6 +110,36 @@ export async function requestAI(params: AIRequestParams) {
         })
       })
       return await hunyuanResponse.json()
+    case 'gemma-3-27b':
+      const gemma27bResponse = await fetch(`${aiConfig['gemma-3-27b'].baseUrl}/chat/completions`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: 'gemma-3-27b-it-qat',
+          messages,
+          temperature: 0.7,
+          max_tokens: 2000,
+          top_p: 0.9,
+          frequency_penalty: 0.1,
+          presence_penalty: 0.1
+        })
+      })
+      return await gemma27bResponse.json()
+    case 'gemma-3-12b':
+      const gemma12bResponse = await fetch(`${aiConfig['gemma-3-12b'].baseUrl}/chat/completions`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: 'gemma-3-12b-it-qat',
+          messages,
+          temperature: 0.7,
+          max_tokens: 2000,
+          top_p: 0.9,
+          frequency_penalty: 0.1,
+          presence_penalty: 0.1
+        })
+      })
+      return await gemma12bResponse.json()
     default:
       throw new Error('不支持的AI服务提供商')
   }

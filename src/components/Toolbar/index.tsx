@@ -9,6 +9,7 @@ import { UploadOutlined, DownloadOutlined, CopyOutlined, RobotOutlined } from '@
 import mammoth from 'mammoth'
 import * as XLSX from 'xlsx'
 import * as pdfjsLib from 'pdfjs-dist'
+import juice from 'juice'
 
 const { Option } = Select
 
@@ -35,6 +36,45 @@ interface ToolbarProps {
   onImport: (content: string) => void
   onAIAutoFormat?: (content: string) => void
   onInsertHTML?: (html: string) => void
+}
+
+const WECHAT_STYLE_WHITELIST = [
+  'color',
+  'font-size',
+  'font-weight',
+  'background-color',
+  'text-align',
+  'line-height',
+  'border',
+  'border-bottom',
+  'border-top',
+  'border-left',
+  'border-right'
+]
+
+function filterWechatStyle(html: string): string {
+  const div = document.createElement('div')
+  div.innerHTML = html
+  const all = div.querySelectorAll('*')
+  all.forEach(el => {
+    if (el instanceof HTMLElement && el.hasAttribute('style')) {
+      const style = el.getAttribute('style') || ''
+      const filtered = style
+        .split(';')
+        .map(s => s.trim())
+        .filter(s => {
+          const key = s.split(':')[0]?.trim()
+          return WECHAT_STYLE_WHITELIST.includes(key)
+        })
+        .join('; ')
+      if (filtered) {
+        el.setAttribute('style', filtered)
+      } else {
+        el.removeAttribute('style')
+      }
+    }
+  })
+  return div.innerHTML
 }
 
 function cleanAIContent(content: string) {
