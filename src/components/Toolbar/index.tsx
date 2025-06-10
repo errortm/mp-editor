@@ -125,7 +125,6 @@ const Toolbar: React.FC<ToolbarProps> = ({ content, onImport, onAIAutoFormat, on
   const { currentTemplate, setCurrentTemplate, templates } = useStyle()
   const [loading, setLoading] = useState(false)
   const [extraPrompt, setExtraPrompt] = useState('')
-  const [showOptimize, setShowOptimize] = useState(false)
   const [optimizePrompt, setOptimizePrompt] = useState('')
   const [conversationHistory, setConversationHistory] = useState<Array<{ role: string; content: string }>>([])
   const [fancyOpen, setFancyOpen] = useState(false)
@@ -284,7 +283,7 @@ const Toolbar: React.FC<ToolbarProps> = ({ content, onImport, onAIAutoFormat, on
       if (formattedContent) {
         if (onAIAutoFormat) onAIAutoFormat(formattedContent)
         message.success('AI智能排版完成（分段处理）')
-        setShowOptimize(true)
+        setOptimizePrompt('')
       } else {
         throw new Error('分段处理后内容为空')
       }
@@ -511,7 +510,8 @@ const Toolbar: React.FC<ToolbarProps> = ({ content, onImport, onAIAutoFormat, on
           复制
         </Button>
       </div>
-      <div className="center">
+      <div className="center" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        <span style={{ fontWeight: 500, marginRight: 4 }}>版式/主题切换：</span>
         <Select
           value={currentTemplate.name}
           onChange={(value) => {
@@ -543,25 +543,21 @@ const Toolbar: React.FC<ToolbarProps> = ({ content, onImport, onAIAutoFormat, on
         >
           AI智能排版
         </Button>
-        {showOptimize && (
-          <>
-            <Input
-              placeholder="输入优化要求（如：标题再大一点）"
-              value={optimizePrompt}
-              onChange={e => setOptimizePrompt(e.target.value)}
-              style={{ width: 200, marginLeft: 8 }}
-            />
-            <Button
-              type="primary"
-              onClick={handleOptimize}
-              loading={loading}
-              icon={<RobotOutlined />}
-              style={{ marginLeft: 8 }}
-            >
-              继续优化
-            </Button>
-          </>
-        )}
+        <Input
+          placeholder="输入优化要求（如：标题再大一点）"
+          value={optimizePrompt}
+          onChange={e => setOptimizePrompt(e.target.value)}
+          style={{ width: 200, marginLeft: 8 }}
+        />
+        <Button
+          type="primary"
+          onClick={handleOptimize}
+          loading={loading}
+          icon={<RobotOutlined />}
+          style={{ marginLeft: 8 }}
+        >
+          继续优化
+        </Button>
       </div>
       <div className="right">
         <span style={{ marginRight: 8 }}>当前AI: {aiConfig.provider}</span>

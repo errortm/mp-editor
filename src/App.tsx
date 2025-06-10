@@ -5,6 +5,8 @@ import Editor from './components/Editor'
 import Preview from './components/Preview'
 import Toolbar from './components/Toolbar'
 import { StyleProvider } from './contexts/StyleContext'
+import ArticleContent from './components/ArticleContent'
+import './App.css'
 
 const { Header, Content } = Layout
 
@@ -34,6 +36,7 @@ const VerticalDivider = styled.div`
 function App() {
   const [markdown, setMarkdown] = useState('# Hello World')
   const editorRef = useRef<any>(null)
+  const [styleType, setStyleType] = useState<'news' | 'minimal' | 'report'>('news')
 
   const handleImport = (content: string) => {
     setMarkdown(content)
@@ -77,6 +80,22 @@ function App() {
           <Preview value={markdown} />
         </StyledContent>
       </StyledLayout>
+      <div className="App" style={{ maxWidth: 900, margin: '0 auto', padding: 24 }}>
+        <div style={{ marginBottom: 24 }}>
+          <label htmlFor="styleType" style={{ fontWeight: 500, marginRight: 8 }}>版式切换：</label>
+          <select
+            id="styleType"
+            value={styleType}
+            onChange={e => setStyleType(e.target.value as any)}
+            style={{ fontSize: 16, padding: '4px 12px' }}
+          >
+            <option value="news">新闻风</option>
+            <option value="minimal">极简风</option>
+            <option value="report">报告风</option>
+          </select>
+        </div>
+        <ArticleContent content={markdown} styleType={styleType} />
+      </div>
     </StyleProvider>
   )
 }
