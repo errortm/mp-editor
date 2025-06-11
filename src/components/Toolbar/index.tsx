@@ -245,7 +245,7 @@ const Toolbar: React.FC<ToolbarProps> = ({ content, onImport, onAIAutoFormat, on
       let formattedContent = ''
       for (let i = 0; i < segments.length; i++) {
         console.log(`处理第${i + 1}/${segments.length}段...`)
-        const segmentPrompt = `你是一个微信公众号Markdown排版专家。请严格按照以下要求处理文本：\n\n1. 自动识别原文中的主标题（一级标题）、二级标题，并用#、##分层级标记。\n2. 保留并增强原有的加粗、列表、引用、表格等Markdown格式。\n3. 严格按照如下主题格式说明进行排版：\n【主题格式说明】：\n${currentTemplate.formatDescription || '无'}\n4. 只输出排版后的Markdown内容，不输出任何解释或补充说明。\n\n原文内容：\n${segments[i]}`
+        const segmentPrompt = `你是一个微信公众号Markdown排版专家。请严格按照以下要求处理文本：\n\n1. 只对原文进行格式和排版优化，不对内容本身做任何增删、改写或润色。\n2. 自动识别原文中的主标题（一级标题）、二级标题，并用#、##分层级标记。\n3. 保留并增强原有的加粗、列表、引用、表格等Markdown格式。\n4. 严格按照如下主题格式说明进行排版：\n【主题格式说明】：\n${currentTemplate.formatDescription || '无'}\n5. 只输出排版后的Markdown内容，不输出任何解释或补充说明。\n\n原文内容：\n${segments[i]}`
         
         try {
           const segmentData = await requestAI({ prompt: segmentPrompt })
