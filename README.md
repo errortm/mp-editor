@@ -21,6 +21,8 @@
 
 ## 安装与运行
 
+### 方式一：本地开发环境
+
 1. 克隆代码仓库
 
 ```bash
@@ -45,6 +47,34 @@ npm run dev
 ```
 http://localhost:5173/
 ```
+
+### 方式二：Docker 部署
+
+1. 克隆代码仓库
+
+```bash
+git clone https://github.com/errortm/mp-editor.git
+cd mp-editor
+```
+
+2. 使用 Docker Compose 构建和运行
+
+```bash
+docker-compose up --build
+```
+
+3. 浏览器访问
+
+```
+http://localhost
+```
+
+#### Docker 相关说明
+
+- 项目使用多阶段构建，最终使用 Nginx 提供静态文件服务
+- 默认端口为 80，如需修改请编辑 `docker-compose.yml` 文件
+- 如需查看容器日志：`docker-compose logs -f`
+- 停止服务：`docker-compose down`
 
 ## AI智能排版配置
 
